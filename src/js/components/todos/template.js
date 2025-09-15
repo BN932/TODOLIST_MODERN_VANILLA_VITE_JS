@@ -4,7 +4,7 @@ export default function getTodoTemplate(todo) {
                         <div class="view">
                         <input class="toggle" type="checkbox" ${todo['completed']? 'checked':''} />
                         <label class="content">${todo['content']}</label>
-                        <button class="destroy"></button>
+                        <button class="destroy" onclick="window.TodoListe.delete(${todo['id']})"></button>
                         </div>
                     </li>
                     `;

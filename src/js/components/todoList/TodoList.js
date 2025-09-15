@@ -1,3 +1,4 @@
+import './style.css';
 import DB from '../../DB.js';
 import Todo from '../todos/Todos.js';
 import getTodolistTemplate from './template.js';
@@ -23,17 +24,18 @@ export default class Todolist {
     this.render();
   }
   delete(id) {
-    const todoId = Number(id);
+    const todoId = id;
     const todoIndex = this.todos.findIndex((t) => t.id === todoId);
     if (todoIndex) {
       this.todos.splice(todoIndex, 1);
       DB.deleteTodo(todoId);
+      this.render();
     }
   }
   update(info){
     const todoId = Number(info.id);
-    const todoContent = info.content
-    const todoIndex = this.todos.findIndex((t) => t.id === todoId);
+    const todoContent = info.content;
+    const todoIndex = Number(this.todos.findIndex((t) => t.id === todoId));
     if (todoIndex) {
       this.todos[todoIndex].content = todoContent;
       DB.updateTodo({todoId, todoContent,});

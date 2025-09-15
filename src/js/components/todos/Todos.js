@@ -1,3 +1,4 @@
+import './style.css';
 import getTodoTemplate from './template.js'
 export default class Todo {
             constructor (data) {

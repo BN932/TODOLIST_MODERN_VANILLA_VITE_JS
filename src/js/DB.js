@@ -12,7 +12,6 @@ export default class DB {
     }
     static async deleteTodo(id){
         const response = await fetch(this.apiURL + "Todolist/" + id, {method: 'DELETE'});
-        return response.json();
     }
     static async updateTodo(data){
         const response = await fetch(this.apiURL + "Todolist", {method: 'PATCH', body: JSON.stringify({id: data.id, content: data.content})});
