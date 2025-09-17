@@ -6,7 +6,7 @@ export default function (todolist) {
                     class="new-todo"
                     placeholder="What needs to be done?"
                     autofocus
-                    onchange="window.TodoListe.addTodo(this.value)"
+                    onchange="window.TodoListe.addTodo(this)"
 
                 />
             </header>
@@ -17,12 +17,12 @@ export default function (todolist) {
                         >Mark all as complete</label
                     >
                 </div>
-                <ul class='todo-list'>
+                <ul class='todo-list' role="todo-list">
                     ${todolist.todos.map((todo) => todo.render()).join('')}
                 </ul>
             </main>
             <footer class="footer">
-                <span class="todo-count">1 item(s) left</span>
+                <span class="todo-count">${window.TodoListe.getItemsLeftCount()} item(s) left</span>
                 <ul class="filters">
                     <li><a href="#/" class="selected">All</a></li>
                     <li><a href="#/active" id="activeItems">Active</a></li>

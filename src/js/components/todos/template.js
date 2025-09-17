@@ -3,8 +3,8 @@ export default function getTodoTemplate(todo) {
                     <li data-id="${todo['id']}" class="${todo['completed']? 'completed':""} items">
                         <div class="view">
                         <input class="toggle" type="checkbox" ${todo['completed']? 'checked':''} />
-                        <label class="content">${todo['content']}</label>
-                        <button class="destroy" onclick="window.TodoListe.delete(${todo['id']})"></button>
+                        <label class="content" ondblclick="window.TodoListe.prepareUpdate({id: ${todo['id']}, todo: this})">${todo['content']}</label>
+                        <button class="destroy" onclick="window.TodoListe.delete({id: ${todo['id']}, todo: this})"></button>
                         </div>
                     </li>
                     `;
