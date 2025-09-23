@@ -44,21 +44,28 @@ export default class Todolist {
       todo.remove();
     }
   }
-  prepareUpdate(info){
-    this.todoId = info.id;
-    const label = info.todo;
+  prepareUpdate(item){
+    this.todoId = item.id;
+    const label = item;
     label.outerHTML = `<input
                     class="new-todo"
                     placeholder="What needs to be done?"
                     autofocus
-                    onchange="window.TodoListe.update({content: this.value, todo: this})"/>`
+                    onchange="window.TodoListe.update(this)"/>`
   }
-  update(info){
-    const todoContent = info.content;
-    const input = info.todo;
-    const todo = input.closest('li');
-    const todoProperties = {content: todoContent, id: this.todoId, completed : todo.completed, createdAt: todo.createdAt};
-    input.outerHTML = `<label class="content" ondblclick="window.TodoListe.prepareUpdate({id: ${this.todoId}, todo: this})">${todoContent}</label>`
+  update(task){
+    //Locate the li, get it's id, get the matching index.
+    const todo = task.closest('li');
+    const todoId = todo.dataset.id;
+    const index = this.todos.findIndex((t) => t.id === todoId);
+    //Locate the Todo object, update it's value.
+    const object = this.todos[index];
+    object.content = task.value;
+    //Prepare API update
+    const todoProperties = {content: object.content, id: object.id, completed : object.completed, createdAt: object.createdAt};
+    //Update display
+    task.outerHTML = `<label class="content" ondblclick="window.TodoListe.prepareUpdate(this)">${task.value}</label>`
+    //Update API
     DB.updateTodo(todoProperties);
   }
 }
