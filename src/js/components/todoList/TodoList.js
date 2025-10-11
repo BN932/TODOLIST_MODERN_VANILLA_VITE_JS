@@ -17,11 +17,27 @@ export default class Todolist {
   }
   render() {
     this.domElt.innerHTML = getTodolistTemplate(this);
+    this.getItemsLeftCount();
+    this.toggleCompleted();
   }
 
   getItemsLeftCount(){
-    return this.todos.filter((todo)=>!todo.completed).length;
+    this.domElt.querySelector('.todo-count').innerText = this.todos.filter((todo)=>!todo.completed).length +" item(s) left";
   };
+
+  toggleCompleted(){
+    this.domElt.querySelectorAll('.toggle').forEach(checkBox => {checkBox.addEventListener('click', (e) =>{
+      e.target.closest('li').classList.toggle('completed');
+      const id = e.target.closest('li').dataset.id;
+      const index = this.todos.findIndex(todo => {return todo.id === id});
+      const Todo = this.todos[index];
+      Todo.completed === true ? this.todos[index].completed = false : this.todos[index].completed = true;
+      this.getItemsLeftCount();
+      const todoProperties = {content: Todo.content, id: Todo.id, completed : Todo.completed, createdAt: Todo.createdAt};
+      DB.updateTodo(todoProperties);
+
+    })});
+  }
 
   async addTodo(data) {
     const todoDB = await DB.createNewTodo(data.value);
@@ -33,6 +49,8 @@ export default class Todolist {
     todoListElt.append(newLi);
     newLi.outerHTML = newTodo.render();
     item.value='';
+    this.getItemsLeftCount();
+    this.toggleCompleted();
   }
   delete(data) {
     const todoId = data.id;
@@ -42,6 +60,7 @@ export default class Todolist {
       this.todos.splice(todoIndex, 1);
       DB.deleteTodo(todoId);
       todo.remove();
+      this.getItemsLeftCount();
     }
   }
   prepareUpdate(item){
@@ -51,20 +70,20 @@ export default class Todolist {
                     class="new-todo"
                     placeholder="What needs to be done?"
                     autofocus
-                    onchange="window.TodoListe.update(this)"/>`
+                    onchange="window.TodoListe.update({object: this, value: this.value})"/>`
   }
-  update(task){
+  update(data){
     //Locate the li, get it's id, get the matching index.
-    const todo = task.closest('li');
+    const todo = data.object.closest('li');
     const todoId = todo.dataset.id;
     const index = this.todos.findIndex((t) => t.id === todoId);
     //Locate the Todo object, update it's value.
-    const object = this.todos[index];
-    object.content = task.value;
+    const Todo = this.todos[index];
+    Todo.content = data.value;
     //Prepare API update
-    const todoProperties = {content: object.content, id: object.id, completed : object.completed, createdAt: object.createdAt};
+    const todoProperties = {content: Todo.content, id: Todo.id, completed : Todo.completed, createdAt: Todo.createdAt};
     //Update display
-    task.outerHTML = `<label class="content" ondblclick="window.TodoListe.prepareUpdate(this)">${task.value}</label>`
+    data.object.outerHTML = `<label class="content" ondblclick="window.TodoListe.prepareUpdate(this)">${data.value}</label>`
     //Update API
     DB.updateTodo(todoProperties);
   }

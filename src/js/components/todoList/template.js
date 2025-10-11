@@ -22,7 +22,7 @@ export default function (todolist) {
                 </ul>
             </main>
             <footer class="footer">
-                <span class="todo-count">${window.TodoListe.getItemsLeftCount()} item(s) left</span>
+                <span class="todo-count"></span>
                 <ul class="filters">
                     <li><a href="#/" class="selected">All</a></li>
                     <li><a href="#/active" id="activeItems">Active</a></li>
